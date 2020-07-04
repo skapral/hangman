@@ -14,12 +14,13 @@
  */
 package hangman;
 
+import com.pragmaticobjects.oo.equivalence.base.EObjectHint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
+@EObjectHint(enabled = false)
 public final class MainTest {
 
     @Test
@@ -29,7 +30,8 @@ public final class MainTest {
         );
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         new Main(input, output, 1).exec();
-        assertThat(output.toString(), containsString("You lost"));
+        
+        Assertions.assertThat(output.toString()).contains("You lost");
     }
 
 }

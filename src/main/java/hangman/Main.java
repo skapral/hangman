@@ -20,7 +20,9 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
+import com.pragmaticobjects.oo.equivalence.base.EObjectHint;
 
+@EObjectHint(enabled = false)
 public class Main {
 
     private final InputStream input;
