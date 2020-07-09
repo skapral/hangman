@@ -29,7 +29,7 @@ public final class MainTest {
             "a\na\na\na\na\n".getBytes()
         );
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        new Main(input, output, 1).exec();
+        new Main2(input, output, 1).start();
         
         Assertions.assertThat(output.toString()).contains("You lost");
     }
