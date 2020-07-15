@@ -21,35 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package player.mistakes;
+package hangman.maskedword;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.pragmaticobjects.oo.inference.api.Inference;
+import com.pragmaticobjects.oo.inference.api.Infers;
+import io.vavr.collection.List;
+import java.util.HashSet;
+import java.util.Random;
 
 /**
  *
  * @author Kapralov Sergey
  */
-public class MistakesRAM implements Mistakes {
-    private final AtomicInteger count;
-    private final int total;
+@Infers(memoized = true, value = "MaskedWordFromDictionary")
+public class MaskedWordFromDictionaryInference implements Inference<MaskedWord> {
+    private final List<String> dictionary;
+    private final Random random;
 
-    public MistakesRAM(AtomicInteger count, int total) {
-        this.count = count;
-        this.total = total;
+    public MaskedWordFromDictionaryInference(List<String> dictionary, Random random) {
+        this.dictionary = dictionary;
+        this.random = random;
     }
-
+    
     @Override
-    public final int increase() {
-        return count.incrementAndGet();
-    }
-
-    @Override
-    public final int current() {
-        return count.get();
-    }
-
-    @Override
-    public final int total() {
-        return total;
+    public final MaskedWord inferredInstance() {
+        int nextInt = random.nextInt(dictionary.size());
+        return new MaskedWordInMemory(dictionary.get(nextInt), new HashSet<>());
     }
 }

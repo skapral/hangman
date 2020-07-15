@@ -25,6 +25,7 @@ package hangman;
 
 import com.pragmaticobjects.oo.equivalence.base.EObjectHint;
 import hangman.game.HangmanGame;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -34,28 +35,7 @@ import java.io.OutputStream;
  */
 @EObjectHint(enabled = false)
 public class Main2 {
-    private final HangmanGame game;
-    private static final String[] WORDS = {
-        "simplicity", "equality", "grandmother",
-        "neighborhood", "relationship", "mathematics",
-        "university", "explanation"
-    };
-
-    public Main2(HangmanGame game) {
-        this.game = game;
-    }
-
-    public Main2(final InputStream in, final OutputStream out, final int m) {
-        this(
-            new HangmanGame(in, out, m)
-        );
-    }
-
     public static void main(final String... args) {
-        new Main2(System.in, System.out, 5).start();
-    }
-    
-    public final void start() {
-        game.start();
+        HangmanGame.newGame(System.in, System.out, 5).start();
     }
 }

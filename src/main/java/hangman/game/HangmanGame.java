@@ -23,41 +23,61 @@
  */
 package hangman.game;
 
+import com.pragmaticobjects.oo.memoized.chm.MemoryCHM;
+import com.pragmaticobjects.oo.memoized.core.Memory;
+import hangman.console.Console;
 import hangman.console.IOConsole;
+import hangman.maskedword.MaskedWordFromDictionary;
 import hangman.maskedword.MaskedWordInMemory;
 import hangman.round.PlayerGuessing;
 import hangman.winningcondition.ComplexGameOverConditions;
 import hangman.winningcondition.PlayingUntilAttemptsAreOver;
 import hangman.winningcondition.PlayingUntilWordGuessed;
+import io.vavr.collection.List;
+import player.mistakes.MistakesRAM;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import player.mistakes.MistakesRAM;
 
 /**
  *
  * @author Kapralov Sergey
  */
 public class HangmanGame extends TurnBasedGame {
-    private HangmanGame(AtomicInteger mistakesCount, Set<Character> attemptsStorage, InputStream input, OutputStream output, int maxMistakes) {
+    private static final String[] WORDS = {
+            "simplicity", "equality", "grandmother",
+            "neighborhood", "relationship", "mathematics",
+            "university", "explanation"
+    };
+
+    public HangmanGame(List<String> dictionary, int maxMistakes, AtomicInteger mistakesCount, Set<Character> attemptsStorage, Console console, Random random, Memory memory) {
         super(
             new PlayerGuessing(
-                new MaskedWordInMemory("abc", attemptsStorage),
+                new MaskedWordFromDictionary(dictionary, random, memory),
                 new MistakesRAM(mistakesCount, maxMistakes),
-                new IOConsole(input, output)
+                console
             ),
             new ComplexGameOverConditions(
-                new PlayingUntilWordGuessed(new MaskedWordInMemory("abc", attemptsStorage)),
-                new PlayingUntilAttemptsAreOver(new MistakesRAM(mistakesCount, maxMistakes))
+                new PlayingUntilAttemptsAreOver(new MistakesRAM(mistakesCount, maxMistakes)),
+                new PlayingUntilWordGuessed(new MaskedWordInMemory("abc", attemptsStorage))
             ),
-            new IOConsole(input, output)
+            console
         );
     }
-    
-    public HangmanGame(InputStream input, OutputStream output, int maxMistakes) {
-        this(new AtomicInteger(), new HashSet<>(), input, output, maxMistakes);
+
+    public static HangmanGame newGame(InputStream is, OutputStream os, int mistakes) {
+        return new HangmanGame(
+            List.of(WORDS),
+            mistakes,
+            new AtomicInteger(),
+            new HashSet<>(),
+            new IOConsole(is, os),
+            new Random(),
+            new MemoryCHM()
+        );
     }
 }

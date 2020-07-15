@@ -17,21 +17,21 @@ package hangman;
 import com.pragmaticobjects.oo.equivalence.base.EObjectHint;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import hangman.game.HangmanGame;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 @EObjectHint(enabled = false)
-public final class MainTest {
-
+public final class HangmanGameTest {
     @Test
     public void failsAfterManyWrongAttempts() throws Exception {
         final ByteArrayInputStream input = new ByteArrayInputStream(
             "a\na\na\na\na\n".getBytes()
         );
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
-        new Main2(input, output, 1).start();
+        HangmanGame.newGame(input, output, 1).start();
         
         Assertions.assertThat(output.toString()).contains("You lost");
     }
-
 }
